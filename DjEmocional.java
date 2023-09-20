@@ -12,21 +12,18 @@ public class DjEmocional extends JFrame implements ActionListener {
     private JTextArea recomendacionArea;
     private JSlider calificacionSlider;
     private JLabel calificacionLabel;
-    private HashMap<String, String> playlists; // Almacena playlists por combinaciones de emociones y objetivos.
+    private HashMap<String, String> playlists;
 
     public DjEmocional() {
         super("Dj Emocional");
 
-        // Datos ficticios de playlists. En una implementación real, este sería un conjunto mucho más grande y se obtendría de una base de datos o API.
+        // Datos ficticios de playlists.
         playlists = new HashMap<>();
         playlists.put("Felicidad_Intensificar_Rock", "Playlist de Rock Alegre");
-        //... [Agregar más playlists según corresponda]
 
-        
         String[] emociones = {"Felicidad", "Tristeza", "Enojo", "Ansiedad", "Estrés"};
         String[] objetivos = {"Intensificar", "Mantener", "Cambiar"};
         String[] generos = {"Rock", "Jazz", "Pop", "Electrónica", "Clásica"};
-
 
         textoInicio = new JLabel("¿Qué emoción sientes?");
         textoObjetivo = new JLabel("¿Qué quieres hacer con tu emoción?");
@@ -45,9 +42,23 @@ public class DjEmocional extends JFrame implements ActionListener {
         calificacionSlider.setPaintTicks(true);
         calificacionSlider.setPaintLabels(true);
 
- 
         enviarButton.addActionListener(this);
-        omitirButton.addActionListener(e -> generarRecomendacion()); 
+        omitirButton.addActionListener(e -> generarRecomendacion());
+
+        // Personalización visual
+        Color backgroundColor = new Color(232, 240, 254); // Un azul claro amigable
+        Color primaryColor = new Color(85, 139, 247); // Azul primario
+        Color secondaryColor = new Color(69, 123, 219); // Azul secundario
+
+        this.getContentPane().setBackground(backgroundColor);
+        enviarButton.setBackground(primaryColor);
+        omitirButton.setBackground(secondaryColor);
+        enviarButton.setForeground(Color.WHITE);
+        omitirButton.setForeground(Color.WHITE);
+        enviarButton.setBorderPainted(false);
+        omitirButton.setBorderPainted(false);
+        enviarButton.setFocusPainted(false);
+        omitirButton.setFocusPainted(false);
 
 
         setLayout(new FlowLayout());
