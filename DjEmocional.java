@@ -2,8 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.net.URI;
+import java.awt.Desktop;
 
 public class DjEmocional extends JFrame implements ActionListener {
     private JLabel textoInicio, textoObjetivo, textoGenero;
@@ -12,14 +15,22 @@ public class DjEmocional extends JFrame implements ActionListener {
     private JTextArea recomendacionArea;
     private JSlider calificacionSlider;
     private JLabel calificacionLabel;
-    private HashMap<String, String> playlists;
+    private HashMap<String, ArrayList<String>> playlists;
+    private HashMap<String, Integer> playlistIndex;
 
     public DjEmocional() {
         super("Dj Emocional");
 
-        // Datos ficticios de playlists.
+        // URLs de playlists reales de Spotify acorde a emociones, objetivos y géneros.
         playlists = new HashMap<>();
-        playlists.put("Felicidad_Intensificar_Rock", "Playlist de Rock Alegre");
+        playlists.put("Felicidad_Intensificar_Rock", new ArrayList<String>() {{
+            add("https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M");
+            add("https://open.spotify.com/playlist/37i9dQZF1DXcF6B6QPhFDv");
+            add("https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd");
+        }});
+        // ... puedes continuar agregando más combinaciones relevantes ...
+
+        playlistIndex = new HashMap<>();
 
         String[] emociones = {"Felicidad", "Tristeza", "Enojo", "Ansiedad", "Estrés"};
         String[] objetivos = {"Intensificar", "Mantener", "Cambiar"};
@@ -43,7 +54,7 @@ public class DjEmocional extends JFrame implements ActionListener {
         calificacionSlider.setPaintLabels(true);
 
         enviarButton.addActionListener(this);
-        omitirButton.addActionListener(e -> generarRecomendacion());
+        omitirButton.addActionListener(e -> omitirYRecomendar());
 
         // Personalización visual
         Color backgroundColor = new Color(232, 240, 254); // Un azul claro amigable
@@ -59,7 +70,6 @@ public class DjEmocional extends JFrame implements ActionListener {
         omitirButton.setBorderPainted(false);
         enviarButton.setFocusPainted(false);
         omitirButton.setFocusPainted(false);
-
 
         setLayout(new FlowLayout());
         add(textoInicio);
@@ -81,17 +91,47 @@ public class DjEmocional extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        generarRecomendacion();
+        generarRecomendacion(true);
     }
 
-    private void generarRecomendacion() {
+    private void generarRecomendacion(boolean resetIndex) {
         String emocion = (String) selectorEmocion.getSelectedItem();
         String objetivo = (String) selectorObjetivo.getSelectedItem();
         String genero = (String) selectorGenero.getSelectedItem();
         String key = emocion + "_" + objetivo + "_" + genero;
 
-        String recomendacion = playlists.getOrDefault(key, "No tenemos una playlist específica para tu selección. Pero aquí hay una sugerencia genérica para ti: ...");
-        recomendacionArea.setText(recomendacion);
+        if (resetIndex) {
+            playlistIndex.put(key, 0);
+        }
+
+        int index = playlistIndex.getOrDefault(key, 0);
+        ArrayList<String> urls = playlists.getOrDefault(key, new ArrayList<String>() {{
+            add("https://open.spotify.com/playlist/0cc8YMQWsSzODyTpdVB6mI"); // URL por defecto si no encuentra combinación
+        }});
+
+        if (index < urls.size()) {
+            String urlRecomendacion = urls.get(index);
+            abrirPlaylist(urlRecomendacion);
+
+            String textoRecomendacion = "Abriendo playlist en Spotify: " + urlRecomendacion;
+            recomendacionArea.setText(textoRecomendacion);
+
+            playlistIndex.put(key, index + 1);
+        } else {
+            recomendacionArea.setText("Lo sentimos, no hay más playlists disponibles para esta combinación.");
+        }
+    }
+
+    private void omitirYRecomendar() {
+        generarRecomendacion(false);
+    }
+
+    private void abrirPlaylist(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
