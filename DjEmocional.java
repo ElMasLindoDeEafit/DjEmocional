@@ -10,15 +10,15 @@ import java.awt.Desktop;
 
 public class DjEmocional extends JFrame implements ActionListener {
     // Definición de componentes gráficos para la interfaz
-    private JLabel textoInicio, textoObjetivo, textoGenero;
-    private JComboBox<String> selectorEmocion, selectorObjetivo, selectorGenero;
-    private JButton enviarButton, omitirButton;
-    private JTextArea recomendacionArea;
-    private JSlider calificacionSlider;
-    private JLabel calificacionLabel;
+    private JLabel textoInicio, textoObjetivo, textoGenero;  // RE1, RE2, RE3
+    private JComboBox<String> selectorEmocion, selectorObjetivo, selectorGenero;  // RE1, RE2, RE3
+    private JButton enviarButton, omitirButton;  // RE4
+    private JTextArea recomendacionArea;  // RS1
+    private JSlider calificacionSlider;  // RE6
+    private JLabel calificacionLabel;  // RE6
     
     // Mapa para almacenar las playlists según género y emoción
-    private HashMap<String, ArrayList<String>> playlists;
+    private HashMap<String, ArrayList<String>> playlists;  // RP1, RP4, RP5
     
     // Objeto para generar números aleatorios
     private Random rand;
@@ -32,7 +32,7 @@ public class DjEmocional extends JFrame implements ActionListener {
 
         // URLs de playlists reales de Spotify acorde a emociones y géneros.
         // La estructura es del tipo genero_emocion
-        playlists = new HashMap<>();
+        playlists = new HashMap<>();  // RP1, RP4, RP5
 
         // Playlists para Rock, Pop, Electrónica y Reggaeton según emociones
 
@@ -125,9 +125,9 @@ public class DjEmocional extends JFrame implements ActionListener {
         }});
 
         // Listas desplegables para las emociones, objetivos y géneros
-        String[] emociones = {"Enojo", "Felicidad", "Tristeza", "Tranquilidad"};
-        String[] objetivos = {"Intensificar", "Mantener", "Cambiar"};
-        String[] generos = {"Rock", "Pop", "Electrónica", "Reggaeton"};
+        String[] emociones = {"Enojo", "Felicidad", "Tristeza", "Tranquilidad"};  // RE1
+        String[] objetivos = {"Intensificar", "Mantener", "Cambiar"};  // RE2
+        String[] generos = {"Rock", "Pop", "Electrónica", "Reggaeton"};  // RE3
 
         // Inicialización de componentes gráficos y configuraciones visuales
         textoInicio = new JLabel("¿Qué emoción sientes?");
@@ -148,10 +148,10 @@ public class DjEmocional extends JFrame implements ActionListener {
         calificacionSlider.setPaintLabels(true);
         
         // Evento al presionar el botón 'Enviar'
-        enviarButton.addActionListener(this);
+        enviarButton.addActionListener(this);  // RS1
         
         // Evento al presionar el botón 'Omitir'
-        omitirButton.addActionListener(e -> omitirYRecomendar());
+        omitirButton.addActionListener(e -> omitirYRecomendar());  // RE4, RS2
 
         // Diseño y estructura de la ventana
         Color backgroundColor = new Color(232, 240, 254); // Un azul claro amigable
@@ -189,41 +189,41 @@ public class DjEmocional extends JFrame implements ActionListener {
     // Método que se ejecuta al hacer clic en el botón 'Enviar'
     @Override
     public void actionPerformed(ActionEvent e) {
-        generarRecomendacion();
+        generarRecomendacion();  // RS1
     }
 
     // Método para generar una recomendación de playlist
     private void generarRecomendacion() {
         // Se obtienen los valores seleccionados en las listas desplegables
-        String emocion = (String) selectorEmocion.getSelectedItem();
-        String objetivo = (String) selectorObjetivo.getSelectedItem();
-        String genero = (String) selectorGenero.getSelectedItem();
+        String emocion = (String) selectorEmocion.getSelectedItem();  // RE1
+        String objetivo = (String) selectorObjetivo.getSelectedItem();  // RE2
+        String genero = (String) selectorGenero.getSelectedItem();  // RE3
         
         // Se forma una clave para buscar en el mapa de playlists
-        String key = genero + "_" + emocion;
+        String key = genero + "_" + emocion;  // RP1
 
         // Si el objetivo es 'Cambiar', se obtiene una emoción opuesta
-        if (objetivo.equals("Cambiar")) {
+        if (objetivo.equals("Cambiar")) {  // RP1
             key = genero + "_" + getEmocionOpuesta(emocion);
         }
 
         // Se obtiene una lista de URLs según la clave generada
-        ArrayList<String> urls = playlists.getOrDefault(key, new ArrayList<>());
+        ArrayList<String> urls = playlists.getOrDefault(key, new ArrayList<>());  // RP1
         
         // Se selecciona una URL de manera aleatoria de la lista obtenida
         int randomIndex = rand.nextInt(urls.size());
-        String urlRecomendacion = urls.get(randomIndex);
+        String urlRecomendacion = urls.get(randomIndex);  // RP1
         
         // Se abre la URL seleccionada en el navegador predeterminado
-        abrirPlaylist(urlRecomendacion);
+        abrirPlaylist(urlRecomendacion);  // RS1
 
         // Se muestra en la interfaz la URL recomendada
-        String textoRecomendacion = "Abriendo playlist en Spotify: " + urlRecomendacion;
+        String textoRecomendacion = "Abriendo playlist en Spotify: " + urlRecomendacion;  // RS1
         recomendacionArea.setText(textoRecomendacion);
     }
 
     // Método para obtener una emoción opuesta a la seleccionada
-    private String getEmocionOpuesta(String emocion) {
+    private String getEmocionOpuesta(String emocion) {  // RP1
         switch (emocion) {
             case "Enojo":
                 return "Tranquilidad";
@@ -241,7 +241,7 @@ public class DjEmocional extends JFrame implements ActionListener {
     // Método para abrir una URL en el navegador predeterminado
     private void abrirPlaylist(String url) {
         try {
-            Desktop.getDesktop().browse(new URI(url));
+            Desktop.getDesktop().browse(new URI(url));  // RS1
         } catch (Exception e) {
             e.printStackTrace();
         }
