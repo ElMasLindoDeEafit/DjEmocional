@@ -222,6 +222,12 @@ public class DjEmocional extends JFrame implements ActionListener {
         recomendacionArea.setText(textoRecomendacion);
     }
 
+    // Método para omitir y generar una nueva recomendación
+    private void omitirYRecomendar() {
+        generarRecomendacion();
+    }
+
+
     // Método para obtener una emoción opuesta a la seleccionada
     private String getEmocionOpuesta(String emocion) {  // RP1
         switch (emocion) {
